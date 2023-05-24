@@ -4,30 +4,71 @@
   "base": "main",
   "rules": [
     {
-      "name": "Design Tokens / Generate theme",
-      "path": "./output/theme.ts",
+      "name": "Design Tokens / Theme",
+      "path": "./output/theme.js",
       "filter": {
         "types": [
-          "vector",
           "color",
-          "font",
-          "textStyle"
+          "textStyle",
+          "font"
         ]
       },
       "parsers": [
         {
-          "name": "to-react-native",
+          "name": "to-tailwind",
           "options": {
-            "colorFormat": "hex",
-            "assetsFolderPath": {
-              "vector": "assets/vector"
+            "formatName": "camelCase",
+            "formatConfig": {
+              "objectName": "extend",
+              "module": "commonjs"
             }
           }
         }
       ]
     },
     {
-      "name": "Assets / Export vectors",
+      "name": "Design Tokens / CSS font imports",
+      "path": "./output/styles/fonts.css",
+      "filter": {
+        "types": [
+          "font"
+        ]
+      },
+      "parsers": [
+        {
+          "name": "to-css-font-import",
+          "options": {
+            "formats": [
+              "woff",
+              "woff2"
+            ],
+            "fontsPath": "../assets/fonts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Design Tokens / Export fonts",
+      "path": "./output/assets/fonts",
+      "filter": {
+        "types": [
+          "font"
+        ]
+      },
+      "parsers": [
+        {
+          "name": "convert-font",
+          "options": {
+            "formats": [
+              "woff",
+              "woff2"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Design Tokens / Vector",
       "path": "./output/assets/vectors",
       "filter": {
         "types": [
@@ -36,7 +77,7 @@
       },
       "parsers": [
         {
-          "name": "camelcasify"
+          "name": "kebabcasify"
         },
         {
           "name": "svgo",
@@ -50,32 +91,21 @@
                   "removeDimensions": true
                 },
                 {
-                  "convertColors": {
-                    "currentColor": true
+                  "removeAttrs": {
+                    "attrs": "*:(fill|stroke)"
+                  }
+                },
+                {
+                  "addAttributesToSVGElement": {
+                    "attributes": [
+                      "width=\"1em\"",
+                      "height=\"1em\"",
+                      "focusable=\"false\""
+                    ]
                   }
                 }
               ]
             }
-          }
-        }
-      ]
-    },
-    {
-      "name": "Assets / Export fonts",
-      "path": "./output/assets/fonts",
-      "filter": {
-        "types": [
-          "font"
-        ]
-      },
-      "parsers": [
-        {
-          "name": "convert-font",
-          "options": {
-            "formats": [
-              "woff2",
-              "woff"
-            ]
           }
         }
       ]
